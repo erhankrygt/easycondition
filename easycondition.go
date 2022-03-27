@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func FirstOrDefault(source interface{}, condition interface{}) (interface{}, error) {
+func First(source interface{}, condition interface{}) (interface{}, error) {
 	s := reflect.Indirect(reflect.ValueOf(source))
 	if s.Kind() != reflect.Slice {
 		panic("source' type is not slice")
