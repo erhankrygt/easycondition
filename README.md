@@ -19,20 +19,20 @@ type Foo struct {
 // Main function
 func main() {
   l := []Foo{
-		{
-			Name: "Monkey",
-			Age:  1,
-		},
-		{
-			Name: "Dog",
-			Age:  2,
-		},
-	}
+	{
+		Name: "Monkey",
+		Age:  1,
+	},
+	{
+		Name: "Dog",
+		Age:  2,
+	},
+   }
 
-	var item, err = easycondition.FirstDefault(l, "Age=2")
-	if err == nil {
-		fmt.Println(item.(Foo))
-	}
+   var item, err = easycondition.FirstDefault(l, "Age=2")
+   if err == nil {
+	fmt.Println(item.(Foo))
+   }
   
   //output
   {Dog 2}
