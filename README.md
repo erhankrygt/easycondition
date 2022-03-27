@@ -29,7 +29,7 @@ func main() {
 	},
    }
 
-   var item, err = easycondition.FirstDefault(l, "Age=2")
+   var item, err = easycondition.FirstOrDefault(l, "Age=2")
    if err == nil {
 	fmt.Println(item.(Foo))
    }
