@@ -29,9 +29,9 @@ func main() {
 	},
    }
 
-   var item, err = easycondition.First(l, "Name=Dog")
+   var equal, err = easycondition.First(l, "Name=Dog")
    if err == nil {
-	fmt.Println(item.(Foo))
+	fmt.Println(equal.(Foo))
    }
   
    //output
