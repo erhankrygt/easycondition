@@ -29,14 +29,30 @@ func main() {
 	},
    }
 
-   var item, err = easycondition.First(l, "Age=2")
+   var item, err = easycondition.First(l, "Name=Dog")
    if err == nil {
 	fmt.Println(item.(Foo))
    }
   
-  //output
-  {Dog 2}
+   //output
+   {Dog 2}
 
+
+   var biggest, err = easycondition.First(l, "Age>1")
+   if err == nil {
+	fmt.Println(biggest.(Foo))
+   }
+   //output
+   {Dog 2}
+   
+   
+   var smallest, err = easycondition.First(l, "Age<2")
+   if err == nil {
+	fmt.Println(smallest.(Foo))
+   }
+   //output
+   {Monkey 1}
+   
 }
 ```
 # Installation
