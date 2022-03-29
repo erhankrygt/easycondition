@@ -3,10 +3,21 @@ package easycondition
 import (
 	"fmt"
 	"reflect"
+	"strconv"
 	"strings"
 )
 
-func First(source interface{}, condition interface{}) (interface{}, error) {
+var (
+	cList = []string{"=", ">", "<"}
+)
+
+const (
+	biggest  = ">"
+	smallest = "<"
+	equal    = "="
+)
+
+func First(source interface{}, condition string) (interface{}, error) {
 	s := reflect.Indirect(reflect.ValueOf(source))
 	if s.Kind() != reflect.Slice {
 		panic("source' type is not slice")
@@ -17,6 +28,8 @@ func First(source interface{}, condition interface{}) (interface{}, error) {
 		panic("condition' type is not string or const value empty")
 	}
 
+	crt := criterion(condition)
+
 	for i := 0; i < s.Len(); i++ {
 		item := s.Index(i)
 		if item.Kind() != reflect.Struct {
@@ -25,21 +38,47 @@ func First(source interface{}, condition interface{}) (interface{}, error) {
 
 		v := reflect.Indirect(item)
 		for j := 0; j < v.NumField(); j++ {
-			cd := fmt.Sprintf("%v", condition)
-			cds := strings.Split(cd, "=")
-			key := v.Type().Field(j).Name
+			cds := strings.Split(fmt.Sprintf("%v", condition), crt)
 			condKey := cds[0]
+			condVal := cds[1]
+
+			key := v.Type().Field(j).Name
+			val := v.Field(j).Interface()
 
 			if key == condKey {
-				val := v.Field(j).Interface()
-				condVal := cds[1]
-
-				if fmt.Sprintf("%v", val) == condVal {
-					return item.Interface(), nil
+				switch crt {
+				case equal:
+					if fmt.Sprintf("%v", val) == condVal {
+						return item.Interface(), nil
+					}
+					break
+				case biggest:
+					v, _ := strconv.Atoi(fmt.Sprintf("%v", val))
+					cv, _ := strconv.Atoi(condVal)
+					if v > cv {
+						return item.Interface(), nil
+					}
+					break
+				case smallest:
+					v, _ := strconv.Atoi(fmt.Sprintf("%v", val))
+					cv, _ := strconv.Atoi(condVal)
+					if v < cv {
+						return item.Interface(), nil
+					}
+					break
 				}
 			}
 		}
 	}
 
 	return nil, fmt.Errorf("cannot find data")
+}
+
+func criterion(c string) string {
+	for _, item := range cList {
+		if strings.Contains(c, item) {
+			return item
+		}
+	}
+	return ""
 }
